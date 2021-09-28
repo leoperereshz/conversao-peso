@@ -1,0 +1,12 @@
+FROM microsoft/dotnet:2.0-sdk AS build
+WORKDIR /app
+COPY ConversaoPeso.Web.csproj ./
+RUN dotnet restore
+COPY . .
+RUN dotnet build -c Release -o out
+
+FROM microsoft/dotnet:2.0-runtime AS runtime
+WORKDIR /app
+COPY --from=build /app/output .
+ENTRYPOINT ["dotnet", "aspnetapp.dll"]
+
