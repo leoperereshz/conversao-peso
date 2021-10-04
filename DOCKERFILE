@@ -1,12 +1,12 @@
-FROM microsoft/dotnet:2.0-sdk AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 as build
 WORKDIR /app
-COPY ConversaoPeso.Web.csproj ./
+COPY ConversaoPeso.Web/*.csproj ./
 RUN dotnet restore
-COPY . .
-RUN dotnet build -c Release -o out
 
-FROM microsoft/dotnet:2.0-runtime AS runtime
+COPY ./ConversaoPeso.Web/. ./
+RUN dotnet publish -c release -o /app --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
-COPY --from=build /app/output .
-ENTRYPOINT ["dotnet", "aspnetapp.dll"]
-
+COPY --from=build /app ./
+ENTRYPOINT ["dotnet", "ConversaoPeso.Web.dll"]
