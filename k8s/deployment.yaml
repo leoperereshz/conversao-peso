@@ -1,33 +1,36 @@
+# Deployment da Aplicação Web
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: conversao-peso
 spec:
   replicas: 1
   selector:
-    matchLabels: 
-      app: app
+    matchLabels:
+      app: conversao-peso
   template:
-    metadata:
+    metadata:        
       labels:
-        app: app
+        app: conversao-peso
     spec:
       containers:
-        - name: app
+        - name: conversao-peso
           image: leopereshz/conversao-peso:v1
           ports:
             - containerPort: 80
+
 ---
-# Service
+# Service da Applicação Web
 apiVersion: v1
 kind: Service
 metadata:
-  name: app
+  name: conversao-peso
 spec:
   selector:
-    app: app
+    app: conversao-peso
   ports:
     - port: 80
-      targetPort: 80
+      protocol: TCP
+      name: http
       nodePort: 30000
-  type: NodePort
+  type: LoadBalancer
